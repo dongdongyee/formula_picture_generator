@@ -243,7 +243,7 @@ class SingleFormulaFetcher:
 class FontLib:
 
     """
-    randomly choose the size and type from the font library
+    randomly choose the font size and type from the font library
     """
 
     def __init__(self, path):
@@ -280,7 +280,7 @@ class FontLib:
 class TextFormulaDrawer:
 
     """
-    this class draws embedded, isolated formulas and plain text
+    this class draws embedded, isolated formulas and plain text with random size, position and color
     """
 
     def __init__(self, formulafetcher, ch_generator, eng_generator, fontlib):
@@ -383,7 +383,7 @@ class TextFormulaDrawer:
 class ImageGenrator:
 
     """
-    generate the fake images and its corresponding annotations
+    generate the fake images and its corresponding json annotations, save them in output_path
     """
 
     def __init__(self, text_formula_drawer, output_path):
@@ -499,17 +499,12 @@ if __name__ == "__main__":
     font_path = "font/"
     fontlib = FontLib(font_path)
 
-
     os.makedirs(output_path, exist_ok=True)
     uni_drawer = TextFormulaDrawer(formulaFetcher, chineseGen, englishGen, fontlib)
     image_genrator = ImageGenrator(uni_drawer, output_path)
 
-    input_list = list(range(10))
-    for i in input_list:
-        image_genrator.generate_img(i)
-
-    # input_list = list(range(num))
-    # p = multiprocessing.Pool(num_process)
-    # res = list(tqdm.tqdm(p.imap(image_genrator.generate_img, input_list), total=len(input_list)))
-    # p.close()
-    # p.join()
+    input_list = list(range(num))
+    p = multiprocessing.Pool(num_process)
+    res = list(tqdm.tqdm(p.imap(image_genrator.generate_img, input_list), total=len(input_list)))
+    p.close()
+    p.join()
